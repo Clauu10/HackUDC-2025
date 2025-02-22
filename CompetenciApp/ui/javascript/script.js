@@ -3,24 +3,22 @@
 // Definimos el contenido de cada "página" como strings
 const pages = {
     login: `
-        <div id="body-main">
-            <div id="login" class="login">
-                <h1>CompetenciApp</h1>
-                <div class="login-container">
-                    <h2>Iniciar Sesión</h2>
-                    <form id="loginForm">
-                        <div class="input-group">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="password">Contraseña:</label>
-                            <input type="password" id="password" name="password" required>
-                        </div>
-                        <button type="submit">Iniciar sesión</button>
-                        <p id="error-message" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
-                    </form>
-                </div>
+        <div id="login" class="login">
+            <h1>CompetenciApp</h1>
+            <div class="login-container">
+                <h2>Iniciar Sesión</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="contrasenha">Contraseña:</label>
+                        <input type="password" id="contrasenha" name="contrasenha" required>
+                    </div>
+                    <button type="submit">Iniciar sesión</button>
+                    <p id="error-message" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
+                </form>
             </div>
         </div>
     `,
@@ -207,14 +205,42 @@ function loadPage(page) {
             event.preventDefault(); // Evita que el formulario se envíe
 
             // Simula una validación de inicio de sesión
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+            const contrasenha = document.getElementById('contrasenha').value;
 
-            if (username === 'usuario' && password === 'contraseña') {
-                loadPage('main'); // Carga la página principal si el inicio de sesión es exitoso
-            } else {
-                document.getElementById('error-message').style.display = 'block'; // Muestra un mensaje de error
-            }
+            fetch('http://localhost:8080/usuarios/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, contrasenha }) // Envía 'contrasenha' al backend
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Credenciales incorrectas');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Respuesta del backend:', data); // Imprime la respuesta
+                if (data.success) { // Verifica si el inicio de sesión fue exitoso
+                    loadPage("main"); // Si el login es exitoso, carga la página principal
+                } else {
+                    const errorMessage = document.getElementById('error-message');
+                    if (errorMessage) {
+                        errorMessage.style.display = 'block'; // Muestra mensaje de error
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error de conexión:', error);
+                const errorMessage = document.getElementById('error-message');
+                if (errorMessage) {
+                    errorMessage.style.display = 'block'; // Muestra mensaje de error
+                } else {
+                    console.error('No se encontró el elemento con id="error-message"');
+                }
+            });
         });
     } else if (page === 'main') {
         document.getElementById('hamburger-icon').addEventListener('click', function () {
@@ -279,5 +305,5 @@ function loadPage(page) {
 
 // Cargamos la página de inicio de sesión por defecto al cargar la aplicación
 document.addEventListener('DOMContentLoaded', function () {
-    loadPage('addResource'); // Ahora se ejecutará cuando el DOM esté listo
+    loadPage('login'); // Ahora se ejecutará cuando el DOM esté listo
 });
