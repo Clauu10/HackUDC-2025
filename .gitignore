@@ -35,5 +35,4 @@ build/
 *.bak
 
 # Archivos generados por la base de datos (si generas dumps o archivos similares)
-*.sql
 *.dump
