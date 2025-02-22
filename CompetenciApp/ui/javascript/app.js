@@ -1,43 +1,25 @@
-const chatWindow = document.getElementById('chat-messages');
-const userInput = document.getElementById('user-input');
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Estilo WhatsApp</title>
+    <link rel="stylesheet" href="/CompetenciApp/ui/css/style2.css">
+</head>
+<body>
 
-// Función para añadir mensajes al chat
-function appendMessage(message, sender) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-    messageDiv.textContent = message;
-    chatWindow.appendChild(messageDiv);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-}
+    <div class="chat-container">
+        <div class="header">Chatbot IA 🤖</div>
+        
+        <div id="chat-window">
+            <div id="chat-messages"></div>
+        </div>
 
-// Función para enviar el mensaje al backend
-async function sendMessage() {
-    const message = userInput.value.trim();
-    if (!message) return;
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Escribe tu mensaje..." autofocus>
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
 
-    // Mostrar el mensaje del usuario
-    appendMessage(message, 'user');
-    userInput.value = '';
-
-    try {
-        // Enviar el mensaje al backend
-        const response = await fetch('http://localhost:8080/chatbot/preguntar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ mensaje: message })
-        });
-
-        if (!response.ok) throw new Error(`Error ${response.status}`);
-
-        const data = await response.text(); // Si el backend responde en texto plano
-        appendMessage(data, 'bot');
-    } catch (error) {
-        appendMessage("⚠️ Error al comunicarse con el chatbot.", 'bot');
-        console.error("Error:", error);
-    }
-}
-
-// Enviar con Enter
-userInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') sendMessage();
-});
+    <script src="/CompetenciApp/ui/javascript/app.js"></script>
+</body>
+</html>
