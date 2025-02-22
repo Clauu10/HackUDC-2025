@@ -1,7 +1,7 @@
 package com.example.CompetenciApp.Model;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "roles")
@@ -15,4 +15,13 @@ public class Rol {
     private Long id;
 
     private String nombre;
+
+    // ✅ Añade el getter si no está presente
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 }
