@@ -122,7 +122,7 @@ public class UsuarioController {
     }
     
     // 3️⃣ Modificar perfil de usuario
-    @PutMapping("/usuarios/{id}/modificar")
+    @PutMapping("/{id}/modificar")
     public ResponseEntity<Usuario> modificarPerfil(@PathVariable Long id, @RequestBody Usuario usuario) {
         Usuario actualizado = usuarioService.modificarPerfil(id, usuario);
         return ResponseEntity.ok(actualizado);

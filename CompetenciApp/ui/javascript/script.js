@@ -275,6 +275,10 @@ const pages = {
                             <input type="text" id="contacto" name="contacto" pattern="[0-9]{9}" maxlength="9" required value="{contacto}">
                         </div>
                         <div class="input-group">
+                            <label for="contrasenha">Contraseña:</label>
+                            <input type="password" id="contrasenha" name="contrasenha" required value="{contrasenha}">
+                        </div>
+                        <div class="input-group">
                             <label for="roles">Rol:</label>
                             <select id="roles">
                                 <option value="analyst" {analyst}>Analista</option>
@@ -587,6 +591,7 @@ function loadPage(page) {
             document.getElementById('nombre').value = data.nombre || '';
             document.getElementById('email').value = data.email || '';
             document.getElementById('contacto').value = data.contacto || '';
+            document.getElementById('contrasenha').value = data.contrasenha || '';
 
         })
         .catch(error => {
@@ -601,6 +606,7 @@ function loadPage(page) {
             const nombre = document.getElementById('nombre').value;
             const email = document.getElementById('email').value;
             const contacto = document.getElementById('contacto').value;
+            const contrasenha = document.getElementById('contrasenha').value;
             const roles = document.getElementById('roles').value;
 
             // Crea un objeto con los datos del usuario
@@ -608,7 +614,8 @@ function loadPage(page) {
                 nombre: nombre,
                 email: email,
                 contacto: contacto,
-                roles: [roles] // Asume que el usuario tiene un solo rol
+                contrasenha: contrasenha,
+                roles: [{ nombre: roles }] // Asume que el usuario tiene un solo rol
             };
 
             // Envía los datos al backend para actualizar el perfil
