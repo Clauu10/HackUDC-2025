@@ -210,13 +210,23 @@ const pages = {
                             <input type="text" id="contacto" name="contacto" pattern="[0-9]{9}" maxlength="9" required>
                         </div>
                         <div class="input-group">
-                            <label for="roles">Rol:</label>
-                            <select id="roles">
-                                <option value="analyst">Analista</option>
-                                <option value="chief">Jefe Proyecto</option>
-                                <option value="dev">Desarrollador</option>
-                                <option value="qa">QA</option>
-                            </select>
+                              <label for="roles">Roles:</label>
+                                <div>
+                                    <input type="checkbox" id="analyst" name="roles" value="analyst">
+                                    <label for="analyst">Analista</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="chief" name="roles" value="chief">
+                                    <label for="chief">Jefe Proyecto</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="dev" name="roles" value="dev">
+                                    <label for="dev">Desarrollador</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="qa" name="roles" value="qa">
+                                    <label for="qa">QA</label>
+                                </div>
                         </div>
                         <button type="submit">Registrarse</button>
                         <p id="error-message" style="color: red; display: none;">Error al registrar el usuario</p>
@@ -344,15 +354,23 @@ function loadPage(page) {
             const email = document.getElementById('email').value;
             const contrasenha = document.getElementById('contrasenha').value;
             const contacto = document.getElementById('contacto').value;
-            const rol = document.getElementById('roles').value;
-                        
+
+            const roles = [];
+            const roleCheckboxes = document.querySelectorAll('input[name="roles"]:checked');
+            roleCheckboxes.forEach(checkbox => roles.push(checkbox.value));
+
+            if (roles.length === 0) {
+                alert("Por favor, selecciona al menos un rol.");
+                return; // Detenemos el envío si no se selecciona ningún rol
+            }
+
             // Crea un objeto con los datos del usuario
             const usuario = {
                 nombre: nombre,
                 email: email,
                 contrasenha: contrasenha,
                 contacto: contacto,
-                roles: [rol] 
+                roles: roles
             };
 
             // Envía los datos al backend
@@ -539,7 +557,8 @@ function loadPage(page) {
             event.preventDefault();
             loadPage('main');
         });
-    }else if (page === 'editProfile') {
+
+    } else if (page === 'editProfile') {
         fetch('http://localhost:8080/usuarios/obtenerDatos', {
             method: 'GET', // Suponiendo que la API usa GET para obtener los datos del usuario
             headers: {
@@ -555,33 +574,64 @@ function loadPage(page) {
             return response.json();
         })
         .then(data => {
-            console.log('Datos del usuario:', data);
-            // Suponiendo que los datos del usuario vienen en un objeto con las propiedades 'email', 'contacto' y 'contrasenha'
-            const { email, contacto, contrasenha } = data;
-    
             // Rellenar los campos del formulario con los datos
-            document.getElementById('email').value = email;
-            document.getElementById('contacto').value = contacto;
-            document.getElementById('contrasenha').value = contrasenha;
+            document.getElementById('nombre').value = data.nombre || '';
+            document.getElementById('email').value = data.email || '';
+            document.getElementById('contacto').value = data.contacto || '';
+
         })
         .catch(error => {
             console.error('Error al cargar los datos del usuario:', error);
         });
 
-        document.getElementById('menuIcon').addEventListener('click', function () {
-            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
-            hamburgerMenu.classList.toggle('show');
-            this.classList.toggle('active');
-        });
-    
-        document.addEventListener('click', function (event) {
-            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
-            const menuIcon = document.getElementById('menuIcon');
-    
-            if (!hamburgerMenu.contains(event.target) && !menuIcon.contains(event.target)) {
-                hamburgerMenu.classList.remove('show');
-                menuIcon.classList.remove('active');
-            }
+        // Manejar el envío del formulario de edición de perfil
+        document.getElementById('editProfileForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe
+
+            // Captura los datos del formulario
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const contacto = document.getElementById('contacto').value;
+            const roles = document.getElementById('roles').value;
+
+            // Crea un objeto con los datos del usuario
+            const usuario = {
+                nombre: nombre,
+                email: email,
+                contacto: contacto,
+                roles: [roles] // Asume que el usuario tiene un solo rol
+            };
+
+            // Envía los datos al backend para actualizar el perfil
+            fetch('http://localhost:8080/usuarios/actualizarPerfil', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Agrega tu token de autenticación si es necesario
+                    // 'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(usuario)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al actualizar el perfil');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Perfil actualizado:', data);
+                alert('Perfil actualizado con éxito!'); // Muestra un mensaje de éxito
+                loadPage('main'); // Redirige al usuario a la página principal
+            })
+            .catch(error => {
+                console.error('Error de conexión:', error);
+                const errorMessage = document.getElementById('error-message');
+                if (errorMessage) {
+                    errorMessage.style.display = 'block'; // Muestra mensaje de error
+                } else {
+                    console.error('No se encontró el elemento con id="error-message"');
+                }
+            });
         });
         
         document.getElementById('user-icon').addEventListener('click', function () {
@@ -669,5 +719,5 @@ function loadPage(page) {
 
 // Cargamos la página de inicio de sesión por defecto al cargar la aplicación
 document.addEventListener('DOMContentLoaded', function () {
-    loadPage('editProfile'); // Ahora se ejecutará cuando el DOM esté listo
+    loadPage('login'); // Ahora se ejecutará cuando el DOM esté listo
 });
