@@ -18,7 +18,7 @@ public class Recurso {
     private String tipo;
     private String descripcion;
 
-    public String getTipo(){
+    public String getTipo() {
         return tipo;
     }
 
@@ -27,5 +27,5 @@ public class Recurso {
         this.tipo = tipo;
         this.descripcion = descripcion;
     }
-    
 }
+

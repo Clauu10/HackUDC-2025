@@ -1,26 +1,34 @@
 package com.example.CompetenciApp.Controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.CompetenciApp.Model.Curso;
 import com.example.CompetenciApp.Model.Recurso;
 import com.example.CompetenciApp.Model.Rol;
 import com.example.CompetenciApp.Model.Tecnologia;
 import com.example.CompetenciApp.Model.Usuario;
+import com.example.CompetenciApp.Repository.CursoRepository;
+import com.example.CompetenciApp.Repository.RecursoRepository;
 import com.example.CompetenciApp.Repository.RolRepository;
 import com.example.CompetenciApp.Repository.TecnologiaRepository;
 import com.example.CompetenciApp.Repository.UsuarioRepository;
-import com.example.CompetenciApp.Repository.RecursoRepository;
-import com.example.CompetenciApp.Repository.CursoRepository;
 import com.example.CompetenciApp.Service.UsuarioService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.Map;
 
 @CrossOrigin(origins = "http://127.0.0.1:5500", allowedHeaders = "*", allowCredentials = "true")
 @RestController
@@ -112,8 +120,9 @@ public class UsuarioController {
             return ResponseEntity.status(401).body(response);
         }
     }
+    
     // 3️⃣ Modificar perfil de usuario
-    @PutMapping("/{id}")
+    @PutMapping("/usuarios/{id}/modificar")
     public ResponseEntity<Usuario> modificarPerfil(@PathVariable Long id, @RequestBody Usuario usuario) {
         Usuario actualizado = usuarioService.modificarPerfil(id, usuario);
         return ResponseEntity.ok(actualizado);
