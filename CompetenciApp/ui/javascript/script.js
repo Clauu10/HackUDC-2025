@@ -192,6 +192,41 @@ const pages = {
                 </div>
             </div>
         </div>
+    `,
+    editProfile: `
+        <div id="body-main">
+            <div class="edit-profile">
+                <h1>CompetenciApp</h1>
+                <div class="edit-profile-container">
+                    <h2>Editar Perfil</h2>
+                    <form id="editProfileForm">
+                        <div class="input-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" name="nombre" required value="{nombre}">
+                        </div>
+                        <div class="input-group">
+                            <label for="email">E-mail:</label>
+                            <input type="email" id="email" name="email" required value="{email}">
+                        </div>
+                        <div class="input-group">
+                            <label for="contacto">Teléfono:</label>
+                            <input type="text" id="contacto" name="contacto" pattern="[0-9]{9}" maxlength="9" required value="{contacto}">
+                        </div>
+                        <div class="input-group">
+                            <label for="roles">Rol:</label>
+                            <select id="roles">
+                                <option value="analyst" {analyst}>Analista</option>
+                                <option value="chief" {chief}>Jefe Proyecto</option>
+                                <option value="dev" {dev}>Desarrollador</option>
+                                <option value="qa" {qa}>QA</option>
+                            </select>
+                        </div>
+                        <button type="submit">Actualizar Perfil</button>
+                        <p id="error-message" style="color: red; display: none;">Error al actualizar el perfil</p>
+                    </form>
+                </div>
+            </div>
+        </div>
     `
 };
 
@@ -318,6 +353,12 @@ function loadPage(page) {
             document.getElementById('dropdown-menu').classList.toggle('show');
         });
         
+        document.getElementById('dropdown-menu').addEventListener('click', function (event) {
+            const target = event.target;
+            loadPage('editProfile'); // Carga la página de edición de perfil
+        });
+        
+        
         // Cerrar el menú si se hace clic fuera
         document.addEventListener('click', function (event) {
             const menu = document.getElementById('dropdown-menu');
@@ -345,24 +386,78 @@ function loadPage(page) {
             console.log("Rol seleccionado:", rol);
         });
 
-    } else if(page == 'search') {
+    } else if (page === 'search') {
         document.getElementById('search-button').addEventListener('click', function () {
             const searchTerm = document.getElementById('search-bar').value;
             const tipo = document.getElementById('tipo').value;
-            const rol = document.getElementById('rol').value;
-
-            // Aquí puedes manejar la lógica de búsqueda
-            console.log("Búsqueda:", searchTerm);
-            console.log("Tipo seleccionado:", tipo);
-            console.log("Rol seleccionado:", rol);
-
-            // Aquí es donde puedes mostrar los resultados de la búsqueda
-            document.getElementById('search-results').innerHTML = `
-                <h1>Resultados de búsqueda</h1>
-                <p>Mostrando resultados para: <strong>${searchTerm}</strong></p>
-                <p>Tipo: ${tipo}, Rol: ${rol}</p>
-                <!-- Aquí se podrían agregar los resultados reales -->
-            `;
+            const rol = document.getElementById('roles').value;
+    
+            fetch(`http://localhost:8080/usuarios/buscar?palabraClave=${searchTerm}&tipo=${tipo}&rol=${rol}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Limpiamos el contenedor de resultados antes de agregar nuevos resultados
+                    const resultsContainer = document.getElementById('search-results');
+                    resultsContainer.innerHTML = ''; // Limpiar resultados previos
+    
+                    // Si no hay resultados, mostrar mensaje
+                    if (data.length === 0) {
+                        resultsContainer.innerHTML = '<p>No se encontraron resultados</p>';
+                    } else {
+                        const resultList = document.createElement('ul'); // Lista para los resultados
+                        data.forEach(item => {
+                            // Crear un item para cada resultado
+                            const listItem = document.createElement('li');
+                            listItem.classList.add('result-item');
+                            
+                            // Aquí usamos los valores que el backend devuelve
+                            const tipo = item.tipo || 'Desconocido';
+                            const descripcion = item.descripcion || 'Sin descripción';
+                            const link = item.link || '#'; // El link puede venir del backend
+    
+                            listItem.innerHTML = `
+                                <strong>Tipo:</strong> ${tipo} <br>
+                                <a href="${link}" target="_blank">Enlace</a> <br>
+                                <p>${descripcion}</p>
+                            `;
+                            resultList.appendChild(listItem);
+                        });
+    
+                        resultsContainer.appendChild(resultList); // Agregar la lista de resultados al contenedor
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la búsqueda:', error);
+                });
+        });
+    }
+    
+    if (page === 'editProfile') {
+        fetch('http://localhost:8080/usuarios/obtenerDatos', {
+            method: 'GET', // Suponiendo que la API usa GET para obtener los datos del usuario
+            headers: {
+                'Content-Type': 'application/json',
+                // Agrega tu token de autenticación si es necesario
+                // 'Authorization': 'Bearer ' + token
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Datos del usuario:', data);
+            // Suponiendo que los datos del usuario vienen en un objeto con las propiedades 'email', 'contacto' y 'contrasenha'
+            const { email, contacto, contrasenha } = data;
+    
+            // Rellenar los campos del formulario con los datos
+            document.getElementById('email').value = email;
+            document.getElementById('contacto').value = contacto;
+            document.getElementById('contrasenha').value = contrasenha;
+        })
+        .catch(error => {
+            console.error('Error al cargar los datos del usuario:', error);
         });
     }
 }
