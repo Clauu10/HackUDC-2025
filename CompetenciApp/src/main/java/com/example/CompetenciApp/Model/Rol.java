@@ -24,4 +24,11 @@ public class Rol {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    public Rol orElseGet(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseGet'");
+    }
+
+    
 }
