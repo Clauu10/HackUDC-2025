@@ -564,12 +564,16 @@ function loadPage(page) {
         });
 
     } else if (page === 'editProfile') {
-        fetch('http://localhost:8080/usuarios/obtenerDatos', {
-            method: 'GET', // Suponiendo que la API usa GET para obtener los datos del usuario
+        const userId = obtenerUserId();
+        if (!userId) {
+            alert("No se pudo obtener el ID del usuario. Por favor, inicie sesión nuevamente.");
+            return;
+        }
+
+        fetch(`http://localhost:8080/usuarios/${userId}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                // Agrega tu token de autenticación si es necesario
-                // 'Authorization': 'Bearer ' + token
             }
         })
         .then(response => {
@@ -608,12 +612,10 @@ function loadPage(page) {
             };
 
             // Envía los datos al backend para actualizar el perfil
-            fetch('http://localhost:8080/usuarios/actualizarPerfil', {
+            fetch(`http://localhost:8080/usuarios/${userId}/modificar`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Agrega tu token de autenticación si es necesario
-                    // 'Authorization': 'Bearer ' + token
                 },
                 body: JSON.stringify(usuario)
             })
@@ -639,6 +641,22 @@ function loadPage(page) {
             });
         });
         
+        document.getElementById('menuIcon').addEventListener('click', function () {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            hamburgerMenu.classList.toggle('show');
+            this.classList.toggle('active');
+        });
+    
+        document.addEventListener('click', function (event) {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            const menuIcon = document.getElementById('menuIcon');
+    
+            if (!hamburgerMenu.contains(event.target) && !menuIcon.contains(event.target)) {
+                hamburgerMenu.classList.remove('show');
+                menuIcon.classList.remove('active');
+            }
+        });
+
         document.getElementById('user-icon').addEventListener('click', function () {
             document.getElementById('dropdown-menu').classList.toggle('show');
         });
