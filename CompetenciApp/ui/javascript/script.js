@@ -26,38 +26,31 @@ const pages = {
     main: `
         <div id="body-main">
             <div id="main" class="home-page">
-                <!-- Icono de usuario con menú -->
                 <div class="user-menu">
                     <button id="user-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="User Icon">
+                         <i class="fas fa-user" style="color: #ac3931; font-size: 24px;"></i>
                     </button>
                     <div id="dropdown-menu" class="dropdown hidden">
-                        <a href="#">Editar perfil</a>
-                        <a href="#" id="logout">Cerrar sesión</a>
+                        <a href="" id="edit">Editar perfil</a>
+                        <a href="" id="logout">Cerrar sesión</a>
                     </div>
                 </div>
-
-                <!-- Menú hamburguesa -->
-                <div id="hamburger-menu" class="hamburger-menu">
-                    <button id="hamburger-icon">
-                        <img src="CompetenciApp/ui/img/menu_24dp_AC3931.png" alt="Menu" width="30" height="30">
+                <div class="hamburger-menu">
+                    <button id="menuIcon">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
                     </button>
-                    <div id="dropdown-hamburger-menu" class="dropdown hidden">
-                        <a href="#">Inicio</a>
-                        <a href="#">Añadir Recurso</a>
-                        <a href="#">Estadísticas</a>
+                    <div id="burg-dropdown-menu" class="burg-dropdown hidden">
+                        <a href="" id="home">Inicio</a>
+                        <a href="" id="addCompetence">Añadir Competencia</a>
                     </div>
                 </div>
-
-
                 <h1 class="title">CompetenciApp</h1>
-
-                <!-- Barra de búsqueda -->
                 <div id="search-main">
                     <input type="text" id="search-bar-main" placeholder="Buscar..." />
                     <button id="search-button-main">Buscar</button>
                 </div>
-
                 <!-- Filtros -->
                 <div id="filters">
                     <div class="filter-group">
@@ -69,7 +62,6 @@ const pages = {
                             <option value="recur">Recursos</option>
                         </select>
                     </div>
-
                     <div class="filter-group">
                         <label for="rol">Rol:</label>
                         <select id="rol">
@@ -86,6 +78,26 @@ const pages = {
     `,
     search: `
         <div class="search-results-container">
+            <div class="user-menu">
+                <button id="user-icon">
+                     <i class="fas fa-user" style="color: #ac3931; font-size: 24px;"></i>
+                </button>
+                <div id="dropdown-menu" class="dropdown hidden">
+                    <a href="" id="edit">Editar perfil</a>
+                    <a href="" id="logout">Cerrar sesión</a>
+                </div>
+            </div>
+            <div class="hamburger-menu">
+                <button id="menuIcon">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </button>
+                <div id="burg-dropdown-menu" class="burg-dropdown hidden">
+                    <a href="" id="home">Inicio</a>
+                    <a href="" id="addCompetence">Añadir Competencia</a>
+                </div>
+            </div>
             <h1 class="title">CompetenciApp</h1>
             <div id="search-and-filters" class="search-and-filter">
                 <div id="search" class="search-container">
@@ -127,6 +139,26 @@ const pages = {
     addResource: `
         <div id="body-main">
             <div id="login" class="login">
+                <div class="user-menu">
+                    <button id="user-icon">
+                         <i class="fas fa-user" style="color: #ac3931; font-size: 24px;"></i>
+                    </button>
+                    <div id="dropdown-menu" class="dropdown hidden">
+                        <a href="" id="edit">Editar perfil</a>
+                        <a href="" id="logout">Cerrar sesión</a>
+                    </div>
+                </div>
+                <div class="hamburger-menu">
+                    <button id="menuIcon">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </button>
+                    <div id="burg-dropdown-menu" class="burg-dropdown hidden">
+                        <a href="" id="home">Inicio</a>
+                        <a href="" id="addCompetence">Añadir Competencia</a>
+                    </div>
+                </div>
                 <h1>CompetenciApp</h1>
                 <div class="login-container">
                     <h2>Nuevo Recurso</h2>
@@ -196,6 +228,26 @@ const pages = {
     editProfile: `
         <div id="body-main">
             <div class="edit-profile">
+                <div class="user-menu">
+                    <button id="user-icon">
+                         <i class="fas fa-user" style="color: #ac3931; font-size: 24px;"></i>
+                    </button>
+                    <div id="dropdown-menu" class="dropdown hidden">
+                        <a href="" id="edit">Editar perfil</a>
+                        <a href="" id="logout">Cerrar sesión</a>
+                    </div>
+                </div>
+                <div class="hamburger-menu">
+                    <button id="menuIcon">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </button>
+                    <div id="burg-dropdown-menu" class="burg-dropdown hidden">
+                        <a href="" id="home">Inicio</a>
+                        <a href="" id="addCompetence">Añadir Competencia</a>
+                    </div>
+                </div>
                 <h1>CompetenciApp</h1>
                 <div class="edit-profile-container">
                     <h2>Editar Perfil</h2>
@@ -334,30 +386,9 @@ function loadPage(page) {
         });
 
     } else if (page === 'main') {
-        document.getElementById('hamburger-icon').addEventListener('click', function () {
-            document.getElementById('dropdown-hamburger-menu').classList.toggle('show');
-        });
-        
-        // Cerrar el menú si se hace clic fuera del menú
-        document.addEventListener('click', function (event) {
-            const menu = document.getElementById('dropdown-hamburger-menu');
-            const hamburgerIcon = document.getElementById('hamburger-icon');
-        
-            if (!menu.contains(event.target) && !hamburgerIcon.contains(event.target)) {
-                menu.classList.remove('show');
-            }
-        });
-        
-
         document.getElementById('user-icon').addEventListener('click', function () {
             document.getElementById('dropdown-menu').classList.toggle('show');
         });
-        
-        document.getElementById('dropdown-menu').addEventListener('click', function (event) {
-            const target = event.target;
-            loadPage('editProfile'); // Carga la página de edición de perfil
-        });
-        
         
         // Cerrar el menú si se hace clic fuera
         document.addEventListener('click', function (event) {
@@ -369,11 +400,42 @@ function loadPage(page) {
             }
         });
 
+
+        document.getElementById('menuIcon').addEventListener('click', function () {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            hamburgerMenu.classList.toggle('show');
+            this.classList.toggle('active');
+        });
+    
+        document.addEventListener('click', function (event) {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            const menuIcon = document.getElementById('menuIcon');
+    
+            if (!hamburgerMenu.contains(event.target) && !menuIcon.contains(event.target)) {
+                hamburgerMenu.classList.remove('show');
+                menuIcon.classList.remove('active');
+            }
+        });
+
         document.getElementById('logout').addEventListener('click', function (event) {
             event.preventDefault(); // Evita que el enlace navegue a otra página
             loadPage('login'); // Carga la página de inicio de sesión
         });
 
+        document.getElementById('addCompetence').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('addResource');
+        });
+
+        document.getElementById('edit').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('editProfile');
+        });
+
+        document.getElementById('home').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('main');
+        });
         
         document.getElementById('search-button').addEventListener('click', function () {
             const searchTerm = document.getElementById('search-bar').value;
@@ -386,7 +448,7 @@ function loadPage(page) {
             console.log("Rol seleccionado:", rol);
         });
 
-    } else if (page === 'search') {
+    } else if (page == 'search') {
         document.getElementById('search-button').addEventListener('click', function () {
             const searchTerm = document.getElementById('search-bar').value;
             const tipo = document.getElementById('tipo').value;
@@ -429,9 +491,55 @@ function loadPage(page) {
                     console.error('Error en la búsqueda:', error);
                 });
         });
-    }
+
+        document.getElementById('menuIcon').addEventListener('click', function () {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            hamburgerMenu.classList.toggle('show');
+            this.classList.toggle('active');
+        });
     
-    if (page === 'editProfile') {
+        document.addEventListener('click', function (event) {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            const menuIcon = document.getElementById('menuIcon');
+    
+            if (!hamburgerMenu.contains(event.target) && !menuIcon.contains(event.target)) {
+                hamburgerMenu.classList.remove('show');
+                menuIcon.classList.remove('active');
+            }
+        });
+        
+        document.getElementById('user-icon').addEventListener('click', function () {
+            document.getElementById('dropdown-menu').classList.toggle('show');
+        });
+        
+        document.getElementById('edit').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('editProfile');
+        });
+        
+        document.addEventListener('click', function (event) {
+            const menu = document.getElementById('dropdown-menu');
+            const userIcon = document.getElementById('user-icon');
+        
+            if (!menu.contains(event.target) && !userIcon.contains(event.target)) {
+                menu.classList.remove('show');
+            }
+        });
+
+        document.getElementById('logout').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el enlace navegue a otra página
+            loadPage('login'); // Carga la página de inicio de sesión
+        });
+
+        document.getElementById('addCompetence').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('addResource');
+        });
+        document.getElementById('home').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('main');
+        });
+    }else if (page === 'editProfile') {
         fetch('http://localhost:8080/usuarios/obtenerDatos', {
             method: 'GET', // Suponiendo que la API usa GET para obtener los datos del usuario
             headers: {
@@ -459,10 +567,107 @@ function loadPage(page) {
         .catch(error => {
             console.error('Error al cargar los datos del usuario:', error);
         });
+
+        document.getElementById('menuIcon').addEventListener('click', function () {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            hamburgerMenu.classList.toggle('show');
+            this.classList.toggle('active');
+        });
+    
+        document.addEventListener('click', function (event) {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            const menuIcon = document.getElementById('menuIcon');
+    
+            if (!hamburgerMenu.contains(event.target) && !menuIcon.contains(event.target)) {
+                hamburgerMenu.classList.remove('show');
+                menuIcon.classList.remove('active');
+            }
+        });
+        
+        document.getElementById('user-icon').addEventListener('click', function () {
+            document.getElementById('dropdown-menu').classList.toggle('show');
+        });
+        
+        document.getElementById('edit').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('editProfile');
+        });
+        
+        document.addEventListener('click', function (event) {
+            const menu = document.getElementById('dropdown-menu');
+            const userIcon = document.getElementById('user-icon');
+        
+            if (!menu.contains(event.target) && !userIcon.contains(event.target)) {
+                menu.classList.remove('show');
+            }
+        });
+
+        document.getElementById('logout').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el enlace navegue a otra página
+            loadPage('login'); // Carga la página de inicio de sesión
+        });
+
+        document.getElementById('addCompetence').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('addResource');
+        });
+        document.getElementById('home').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('main');
+        });
+
+    } else if (page == 'addResource') {
+        document.getElementById('menuIcon').addEventListener('click', function () {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            hamburgerMenu.classList.toggle('show');
+            this.classList.toggle('active');
+        });
+    
+        document.addEventListener('click', function (event) {
+            const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+            const menuIcon = document.getElementById('menuIcon');
+    
+            if (!hamburgerMenu.contains(event.target) && !menuIcon.contains(event.target)) {
+                hamburgerMenu.classList.remove('show');
+                menuIcon.classList.remove('active');
+            }
+        });
+        
+        document.getElementById('user-icon').addEventListener('click', function () {
+            document.getElementById('dropdown-menu').classList.toggle('show');
+        });
+        
+        document.getElementById('edit').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('editProfile');
+        });
+        
+        document.addEventListener('click', function (event) {
+            const menu = document.getElementById('dropdown-menu');
+            const userIcon = document.getElementById('user-icon');
+        
+            if (!menu.contains(event.target) && !userIcon.contains(event.target)) {
+                menu.classList.remove('show');
+            }
+        });
+
+        document.getElementById('logout').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el enlace navegue a otra página
+            loadPage('login'); // Carga la página de inicio de sesión
+        });
+
+        document.getElementById('addCompetence').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('addResource');
+        });
+        document.getElementById('home').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('main');
+        });
     }
 }
 
 // Cargamos la página de inicio de sesión por defecto al cargar la aplicación
 document.addEventListener('DOMContentLoaded', function () {
-    loadPage('login'); // Ahora se ejecutará cuando el DOM esté listo
+    loadPage('editProfile'); // Ahora se ejecutará cuando el DOM esté listo
 });

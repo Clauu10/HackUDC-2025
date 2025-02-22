@@ -1,6 +1,6 @@
 /* styles.css */
 
-.login-container, .register-container {
+.login-container, .register-container, .edit-profile-container {
     background-color: #fff;
     padding: 20px;
     justify-content: center;
@@ -207,51 +207,85 @@ body {
     font-size: 16px;
 }
 
-/* Menú Hamburguesa */
 .hamburger-menu {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    position: fixed;
+    top: 15px;
+    left: 10px;
+    z-index: 1000;
 }
 
-#dropdown-hamburger-menu {
-    position: absolute;
-    left: 0;
-    top: 40px;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 150px;
-    display: none;
-    flex-direction: column;
-    text-align: left;
-}
-
-#dropdown-hamburger-menu a {
+#menuIcon {
+    background: none;
+    border: none;
+    cursor: pointer;
     padding: 10px;
-    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bar {
+    width: 25px;
+    height: 3px;
+    background-color: #ac3931;
+    transition: 0.4s;
+}
+
+.dropdown, .burg-dropdown {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 1000;
+}
+
+.dropdown a, .burg-dropdown a {
+    display: block;
     color: #333;
+    text-decoration: none;
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+.dropdown a:hover, .burg-dropdown a:hover {
+    background-color: #f1f1f1;
+}
+
+.hidden {
+    display: none;
+}
+
+.show {
     display: block;
 }
 
-#dropdown-hamburger-menu a:hover {
-    background-color: #f0f0f0;
+#menuIcon.active .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
 }
+
+#menuIcon.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+#menuIcon.active .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
 
 .search-results-container h1{
     margin-top: 20px;
 }
 
-/* Contenedor principal de la barra de búsqueda y filtros */
 .search-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Reducimos el espacio entre elementos */
-    flex-wrap: nowrap; /* Evita que los elementos se desplacen a la siguiente línea */
+    gap: 10px;
+    flex-wrap: nowrap; 
 }
 
-/* Ajustes de la barra de búsqueda */
 #search-bar {
     max-width: 400px;
     padding: 12px;
