@@ -1,0 +1,27 @@
+#define como se ejecutan los contenedores (app y BD)
+services:
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: xpn
+      POSTGRES_PASSWORD: xpn
+      POSTGRES_DB: CompetenciApp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: competenciapp
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/CompetenciApp
+      SPRING_DATASOURCE_USERNAME: xpn
+      SPRING_DATASOURCE_PASSWORD: xpn
+    ports:
+      - "8080:8080"
+volumes:
+  postgres_data:
