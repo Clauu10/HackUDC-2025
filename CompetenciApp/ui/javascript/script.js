@@ -19,6 +19,7 @@ const pages = {
                     <button type="submit">Iniciar sesión</button>
                     <p id="error-message" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
                 </form>
+                <button id="register-button" style="margin-top: 10px;">Registrarse</button>
             </div>
         </div>
     `,
@@ -156,29 +157,29 @@ const pages = {
     register:`
         <div id="body-main">
             <div class="register">
-            <h1>CompetenciApp</h1>
+                <h1>CompetenciApp</h1>
                 <div class="register-container">
                     <h2>Registrarse</h2>
                     <form id="registerForm">
                         <div class="input-group">
-                            <label for="name">Nombre:</label>
-                            <input type="text" id="name" name="name" required>
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" name="nombre" required>
                         </div>
                         <div class="input-group">
                             <label for="email">E-mail:</label>
                             <input type="email" id="email" name="email" required>
+                        </dsiv>
+                        <div class="input-group">
+                            <label for="contrasenha">Contraseña:</label>
+                            <input type="password" id="contrasenha" name="contrasenha" required>
                         </div>
                         <div class="input-group">
-                            <label for="password">Contraseña:</label>
-                            <input type="password" id="password" name="password" required>
+                            <label for="contacto">Teléfono:</label>
+                            <input type="text" id="contacto" name="contacto" pattern="[0-9]{9}" maxlength="9" required>
                         </div>
                         <div class="input-group">
-                            <label for="phonenumber">Teléfono:</label>
-                            <input type="text" id="phonenumber" name="phonenumber" pattern="[0-9]{9}" maxlength="9" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="role">Rol:</label>
-                            <select id="role">
+                            <label for="roles">Rol:</label>
+                            <select id="roles">
                                 <option value="analyst">Analista</option>
                                 <option value="chief">Jefe Proyecto</option>
                                 <option value="dev">Desarrollador</option>
@@ -186,7 +187,7 @@ const pages = {
                             </select>
                         </div>
                         <button type="submit">Registrarse</button>
-                        <p id="error-message" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
+                        <p id="error-message" style="color: red; display: none;">Error al registrar el usuario</p>
                     </form>
                 </div>
             </div>
@@ -242,6 +243,61 @@ function loadPage(page) {
                 }
             });
         });
+
+        document.getElementById('register-button').addEventListener('click', function () {
+            loadPage('register'); // Carga la página de registro
+        });
+
+    } else if (page === 'register') {
+        document.getElementById('registerForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe
+
+            // Captura los datos del formulario
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const contrasenha = document.getElementById('contrasenha').value;
+            const contacto = document.getElementById('contacto').value;
+            const rol = document.getElementById('roles').value;
+                        
+            // Crea un objeto con los datos del usuario
+            const usuario = {
+                nombre: nombre,
+                email: email,
+                contrasenha: contrasenha,
+                contacto: contacto,
+                roles: [rol] 
+            };
+
+            // Envía los datos al backend
+            fetch('http://localhost:8080/usuarios/registrar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(usuario)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al registrar el usuario');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Usuario registrado:', data);
+                alert('Registro exitoso!'); // Muestra un mensaje de éxito
+                loadPage('login'); // Redirige al usuario a la página de inicio de sesión
+            })
+            .catch(error => {
+                console.error('Error de conexión:', error);
+                const errorMessage = document.getElementById('error-message');
+                if (errorMessage) {
+                    errorMessage.style.display = 'block'; // Muestra mensaje de error
+                } else {
+                    console.error('No se encontró el elemento con id="error-message"');
+                }
+            });
+        });
+
     } else if (page === 'main') {
         document.getElementById('hamburger-icon').addEventListener('click', function () {
             document.getElementById('dropdown-hamburger-menu').classList.toggle('show');
@@ -271,6 +327,13 @@ function loadPage(page) {
                 menu.classList.remove('show');
             }
         });
+
+        document.getElementById('logout').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el enlace navegue a otra página
+            loadPage('login'); // Carga la página de inicio de sesión
+        });
+
+        
         document.getElementById('search-button').addEventListener('click', function () {
             const searchTerm = document.getElementById('search-bar').value;
             const tipo = document.getElementById('tipo').value;
@@ -281,6 +344,7 @@ function loadPage(page) {
             console.log("Tipo seleccionado:", tipo);
             console.log("Rol seleccionado:", rol);
         });
+
     } else if(page == 'search') {
         document.getElementById('search-button').addEventListener('click', function () {
             const searchTerm = document.getElementById('search-bar').value;
