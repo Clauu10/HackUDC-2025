@@ -6,6 +6,8 @@ import com.example.CompetenciApp.Model.Rol;
 import com.example.CompetenciApp.Model.Tecnologia;
 import com.example.CompetenciApp.Model.Usuario;
 import com.example.CompetenciApp.Repository.UsuarioRepository;
+import com.example.CompetenciApp.Repository.RecursoRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,11 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final RecursoRepository recursoRepository;
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, RecursoRepository recursoRepository) {
         this.usuarioRepository = usuarioRepository;
+        this.recursoRepository = recursoRepository;
     }
     // 1️⃣ Registrar usuario
     public Usuario registrarUsuario(Usuario usuario) {
@@ -46,7 +50,13 @@ public class UsuarioService {
     // 4️⃣ Añadir recurso a un usuario
     public Usuario añadirRecurso(Long usuarioId, Recurso recurso) {
         return usuarioRepository.findById(usuarioId).map(usuario -> {
-            usuario.getRecursos().add(recurso);
+            // ✅ Guardar el recurso primero
+            Recurso recursoGuardado = recursoRepository.save(recurso);
+
+            // Añadir recurso guardado al usuario
+            usuario.getRecursos().add(recursoGuardado);
+
+            // ✅ Guardar el usuario con el recurso asociado
             return usuarioRepository.save(usuario);
         }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
