@@ -296,6 +296,40 @@ const pages = {
         </div>
     `
 };
+function mostrarResultadosBusqueda(data, palabraClave) {
+    const app = document.getElementById('app');
+    let resultadosHTML = `
+        <div class="search-results-container">
+            <h1>Resultados de búsqueda para: "${palabraClave}"</h1>
+            <button id="volver">Volver</button>
+            <ul class="resultados-lista">
+    `;
+
+    if (data.length === 0) {
+        resultadosHTML += `<li>No se encontraron resultados para "${palabraClave}".</li>`;
+    } else {
+        data.forEach(usuario => {
+            resultadosHTML += `
+                <li>
+                    <strong>Nombre:</strong> ${usuario.nombre} <br>
+                    <strong>Email:</strong> ${usuario.email} <br>
+                    <strong>Contacto:</strong> ${usuario.contacto || 'N/A'} <br>
+                    <strong>Recursos:</strong> ${usuario.recursos.map(recurso => recurso.nombre).join(', ') || 'Sin recursos'} <br>
+                    <strong>Roles:</strong> ${usuario.roles.map(rol => rol.nombre).join(', ') || 'Sin rol'} <br>
+                </li><hr>
+            `;
+        });
+    }
+
+    resultadosHTML += `</ul></div>`;
+
+    app.innerHTML = resultadosHTML;
+
+    // Evento para volver al main
+    document.getElementById('volver').addEventListener('click', function () {
+        loadPage('main');
+    });
+}
 
 function obtenerUserId() {
     return localStorage.getItem('userId'); // Retorna el ID del usuario
@@ -418,16 +452,36 @@ function loadPage(page) {
         document.getElementById('user-icon').addEventListener('click', function () {
             document.getElementById('dropdown-menu').classList.toggle('show');
         });
-        
-        // Cerrar el menú si se hace clic fuera
+    
         document.addEventListener('click', function (event) {
             const menu = document.getElementById('dropdown-menu');
             const userIcon = document.getElementById('user-icon');
-        
             if (!menu.contains(event.target) && !userIcon.contains(event.target)) {
                 menu.classList.remove('show');
             }
         });
+    
+        document.getElementById('search-button-main').addEventListener('click', function () {
+            const searchTerm = document.getElementById('search-bar-main').value.trim();
+    
+            if (searchTerm === "") {
+                alert("Por favor, ingresa una palabra clave para buscar.");
+                return;
+            }
+    
+            fetch(`http://localhost:8080/usuarios/buscar?palabraClave=${searchTerm}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Resultados de búsqueda:', data);
+                    mostrarResultadosBusqueda(data, searchTerm);
+                })
+                .catch(error => {
+                    console.error('Error en la búsqueda:', error);
+                    alert('Error al realizar la búsqueda. Intenta nuevamente.');
+                });
+        });
+    
+    
 
         document.getElementById('chatBot').addEventListener('click', function (event) {
             event.preventDefault();  
