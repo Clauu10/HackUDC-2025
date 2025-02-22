@@ -1,0 +1,39 @@
+# Archivos y carpetas generados por IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# Archivos y carpetas generados por VS Code
+.vscode/
+
+# Archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de dependencias y compilación
+/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Archivos de configuración de Maven (si usas Maven)
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+
+# Archivos de configuración de Gradle (si usas Gradle)
+.gradle/
+build/
+
+# Archivos de logs
+*.log
+
+# Archivos temporales del sistema operativo
+*.swp
+*.swo
+*.bak
+
+# Archivos generados por la base de datos (si generas dumps o archivos similares)
+*.sql
+*.dump
