@@ -16,7 +16,7 @@ public class Usuario {
     private String contacto;
     private String contrasenha;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "usuario_rol",
             joinColumns = @JoinColumn(name = "usuario_id"),
@@ -24,7 +24,7 @@ public class Usuario {
     )
     private List<Rol> roles;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "usuario_tecnologia",
             joinColumns = @JoinColumn(name = "usuario_id"),
@@ -32,7 +32,7 @@ public class Usuario {
     )
     private List<Tecnologia> tecnologias;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "usuario_curso",
             joinColumns = @JoinColumn(name = "usuario_id"),
@@ -40,7 +40,7 @@ public class Usuario {
     )
     private List<Curso> cursos;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "usuario_recurso",
             joinColumns = @JoinColumn(name = "usuario_id"),
