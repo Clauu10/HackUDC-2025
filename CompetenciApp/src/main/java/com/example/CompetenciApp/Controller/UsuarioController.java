@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
+@CrossOrigin(origins = "http://127.0.0.1:5500", allowedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -28,13 +31,26 @@ public class UsuarioController {
     }
 
     // 2️⃣ Iniciar sesión
-    @PostMapping("/login")
-    public ResponseEntity<Usuario> iniciarSesion(@RequestParam String email, @RequestParam String contrasenha) {
-        Optional<Usuario> usuario = usuarioService.iniciarSesion(email, contrasenha);
-        return usuario.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(401).build());
-    }
+   @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> iniciarSesion(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String contrasenha = credentials.get("contrasenha");
 
+        Optional<Usuario> usuarioOpt = usuarioService.iniciarSesion(email, contrasenha);
+
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("usuario", usuario);
+            return ResponseEntity.ok(response);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Credenciales incorrectas");
+            return ResponseEntity.status(401).body(response);
+        }
+    }
     // 3️⃣ Modificar perfil de usuario
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> modificarPerfil(@PathVariable Long id, @RequestBody Usuario usuario) {
