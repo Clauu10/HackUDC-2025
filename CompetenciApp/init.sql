@@ -1,3 +1,70 @@
+-- Crear la tabla 'roles'
+CREATE TABLE IF NOT EXISTS roles (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL
+);
+
+-- Crear la tabla 'tecnologias'
+CREATE TABLE IF NOT EXISTS tecnologias (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    tipo VARCHAR(255),
+    descripcion TEXT
+);
+
+-- Crear la tabla 'recursos'
+CREATE TABLE IF NOT EXISTS recursos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    tipo VARCHAR(255),
+    descripcion TEXT
+);
+
+-- Crear la tabla 'cursos'
+CREATE TABLE IF NOT EXISTS cursos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    tipo VARCHAR(255),
+    descripcion TEXT
+);
+
+-- Crear la tabla 'usuario'
+CREATE TABLE IF NOT EXISTS usuario (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    contrasenha VARCHAR(255) NOT NULL,
+    contacto VARCHAR(255)
+);
+
+-- Crear la tabla 'usuario_rol'
+CREATE TABLE IF NOT EXISTS usuario_rol (
+    usuario_id INT REFERENCES usuario(id),
+    rol_id INT REFERENCES roles(id),
+    PRIMARY KEY (usuario_id, rol_id)
+);
+
+-- Crear la tabla 'usuario_tecnologia'
+CREATE TABLE IF NOT EXISTS usuario_tecnologia (
+    usuario_id INT REFERENCES usuario(id),
+    tecnologia_id INT REFERENCES tecnologias(id),
+    PRIMARY KEY (usuario_id, tecnologia_id)
+);
+
+-- Crear la tabla 'usuario_curso'
+CREATE TABLE IF NOT EXISTS usuario_curso (
+    usuario_id INT REFERENCES usuario(id),
+    curso_id INT REFERENCES cursos(id),
+    PRIMARY KEY (usuario_id, curso_id)
+);
+
+-- Crear la tabla 'usuario_recurso'
+CREATE TABLE IF NOT EXISTS usuario_recurso (
+    usuario_id INT REFERENCES usuario(id),
+    recurso_id INT REFERENCES recursos(id),
+    PRIMARY KEY (usuario_id, recurso_id)
+);
+
 -- Insertar datos en la tabla 'roles'
 INSERT INTO roles (nombre) VALUES
 ('Administrador'),
@@ -5,24 +72,24 @@ INSERT INTO roles (nombre) VALUES
 ('Invitado');
 
 -- Insertar datos en la tabla 'tecnologias'
-INSERT INTO tecnologias (nombre) VALUES
-('Java'),
-('Python'),
-('JavaScript'),
-('Docker'),
-('Spring Boot');
-
--- Insertar datos en la tabla 'cursos'
-INSERT INTO cursos (nombre, descripcion) VALUES
-('Curso de Java', 'Aprende Java desde cero'),
-('Curso de Docker', 'Domina la contenerización con Docker'),
-('Curso de Spring Boot', 'Desarrollo de aplicaciones con Spring Boot');
+INSERT INTO tecnologias (nombre, tipo, descripcion) VALUES
+('Java', 'Lenguaje', 'hgfgfc'),
+('Python', 'Lenguaje', 'hgfgfc'),
+('JavaScript', 'Lenguaje', 'hgfgfc'),
+('Docker', 'Herramienta', 'hgfgfc'),
+('Spring Boot', 'Framework', 'hgfgfc');
 
 -- Insertar datos en la tabla 'recursos'
-INSERT INTO recursos (tipo, descripcion, link) VALUES
-('Video', 'Introducción a Java', 'https://youtube.com/java-intro'),
-('Documento', 'Guía de Docker', 'https://docs.docker.com'),
-('Video', 'Spring Boot en 10 minutos', 'https://youtube.com/spring-boot');
+INSERT INTO recursos (nombre, tipo, descripcion) VALUES
+('Introducción a Java', 'Video', 'https://youtube.com/java-intro'),
+('Guía de Docker', 'Documento', 'https://docs.docker.com'),
+('Spring Boot en 10 minutos', 'Video', 'https://youtube.com/spring-boot');
+
+-- Insertar datos en la tabla 'cursos'
+INSERT INTO cursos (nombre, tipo, descripcion) VALUES
+('Curso de Java', 'Desarrollo', 'Aprende Java desde cero'),
+('Curso de Docker', 'Contenerización', 'Domina la contenerización con Docker'),
+('Curso de Spring Boot', 'Desarrollo', 'Desarrollo de aplicaciones con Spring Boot');
 
 -- Insertar datos en la tabla 'usuario'
 INSERT INTO usuario (nombre, email, contrasenha, contacto) VALUES
