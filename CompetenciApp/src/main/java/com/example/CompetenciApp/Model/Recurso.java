@@ -14,7 +14,18 @@ public class Recurso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nombre;
     private String tipo;
-    private String link;
     private String descripcion;
+
+    public String getTipo(){
+        return tipo;
+    }
+
+    public Recurso(String nombre, String tipo, String descripcion) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.descripcion = descripcion;
+    }
+    
 }

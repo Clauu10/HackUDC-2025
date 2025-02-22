@@ -107,18 +107,20 @@ public class UsuarioService {
 
 
     // 4️⃣ Añadir recurso a un usuario
-    /*public Usuario añadirRecurso(Long usuarioId, Recurso recurso) {
-        return usuarioRepository.findById(usuarioId).map(usuario -> {
-            // ✅ Guardar el recurso primero
-            Recurso recursoGuardado = recursoRepository.save(recurso);
+    public Usuario añadirRecurso(Long usuarioId, Recurso recurso) {
+        // Busca el usuario por ID
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            // Añadir recurso guardado al usuario
-            usuario.getRecursos().add(recursoGuardado);
+        // Guarda el recurso en la base de datos
+        recurso = recursoRepository.save(recurso);
 
-            // ✅ Guardar el usuario con el recurso asociado
-            return usuarioRepository.save(usuario);
-        }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-    }*/
+        // Añade el recurso al usuario
+        usuario.getRecursos().add(recurso);
+
+        // Guarda el usuario actualizado
+        return usuarioRepository.save(usuario);
+    }
 
     // 5️⃣ Buscar por palabra clave (en nombre, tecnologías, cursos o roles)
     public List<Usuario> buscarPorPalabraClave(String palabraClave) {

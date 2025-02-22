@@ -1,9 +1,15 @@
 package com.example.CompetenciApp.Controller;
 
+import com.example.CompetenciApp.Model.Curso;
 import com.example.CompetenciApp.Model.Recurso;
 import com.example.CompetenciApp.Model.Rol;
+import com.example.CompetenciApp.Model.Tecnologia;
 import com.example.CompetenciApp.Model.Usuario;
 import com.example.CompetenciApp.Repository.RolRepository;
+import com.example.CompetenciApp.Repository.TecnologiaRepository;
+import com.example.CompetenciApp.Repository.UsuarioRepository;
+import com.example.CompetenciApp.Repository.RecursoRepository;
+import com.example.CompetenciApp.Repository.CursoRepository;
 import com.example.CompetenciApp.Service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +35,18 @@ public class UsuarioController {
 
     @Autowired
     private RolRepository rolRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private TecnologiaRepository tecnologiaRepository;
+
+    @Autowired
+    private RecursoRepository recursoRepository;
+
+    @Autowired
+    private CursoRepository cursoRepository;
     
     // 1️⃣ Registrar usuario
     @PostMapping("/registrar")
@@ -102,11 +120,35 @@ public class UsuarioController {
     }
 
     // 4️⃣ Añadir recurso a un usuario
-    /*@PostMapping("/{id}/recurso")
+    @PostMapping("/{id}/recurso")
     public ResponseEntity<Usuario> añadirRecurso(@PathVariable Long id, @RequestBody Recurso recurso) {
-        Usuario actualizado = usuarioService.añadirRecurso(id, recurso);
-        return ResponseEntity.ok(actualizado);
-    }*/
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        String tipo = recurso.getTipo(); // Obtenemos el tipo del recurso
+
+        if ("curso".equalsIgnoreCase(tipo)) {
+            Curso curso = new Curso(recurso.getNombre(), recurso.getTipo(), recurso.getDescripcion()); 
+            cursoRepository.save(curso);
+            usuario.getCursos().add(curso); 
+
+        } else if ("tecnologia".equalsIgnoreCase(tipo)) {
+            Tecnologia tecnologia = new Tecnologia(recurso.getNombre(), recurso.getTipo(), recurso.getDescripcion());
+            tecnologiaRepository.save(tecnologia);
+            usuario.getTecnologias().add(tecnologia);
+
+        } else if ("recurso".equalsIgnoreCase(tipo)) {
+            recursoRepository.save(recurso);
+            usuario.getRecursos().add(recurso);
+        } else {
+            throw new RuntimeException("Tipo de recurso no válido: " + tipo);
+        }
+
+        usuarioRepository.save(usuario);
+        return ResponseEntity.ok(usuario);
+    }
+
+
 
     // 5️⃣ Buscar por palabra clave
     @GetMapping("/buscar")

@@ -135,8 +135,8 @@ const pages = {
             </div>
         </div>
 
-    `,
-    addResource: `
+        `,
+        addResource: `
         <div id="body-main">
             <div id="login" class="login">
                 <div class="user-menu">
@@ -238,7 +238,7 @@ const pages = {
     editProfile: `
         <div id="body-main">
             <div class="edit-profile">
-                <div class="user-menu">
+                 <div class="user-menu">
                     <button id="user-icon">
                          <i class="fas fa-user" style="color: #ac3931; font-size: 24px;"></i>
                     </button>
@@ -292,6 +292,10 @@ const pages = {
     `
 };
 
+function obtenerUserId() {
+    return localStorage.getItem('userId'); // Retorna el ID del usuario
+}
+
 // Función para cargar una página dinámicamente
 function loadPage(page) {
     const app = document.getElementById('app');
@@ -311,7 +315,7 @@ function loadPage(page) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, contrasenha }) // Envía 'contrasenha' al backend
+                body: JSON.stringify({ email, contrasenha })
             })
             .then(response => {
                 if (!response.ok) {
@@ -320,13 +324,15 @@ function loadPage(page) {
                 return response.json();
             })
             .then(data => {
-                console.log('Respuesta del backend:', data); // Imprime la respuesta
-                if (data.success) { // Verifica si el inicio de sesión fue exitoso
-                    loadPage("main"); // Si el login es exitoso, carga la página principal
+                console.log('Respuesta del backend:', data);
+                if (data.success) {
+                    // Almacena el ID del usuario en localStorage
+                    localStorage.setItem('userId', data.usuario.id);
+                    loadPage("main");
                 } else {
                     const errorMessage = document.getElementById('error-message');
                     if (errorMessage) {
-                        errorMessage.style.display = 'block'; // Muestra mensaje de error
+                        errorMessage.style.display = 'block';
                     }
                 }
             })
@@ -334,7 +340,7 @@ function loadPage(page) {
                 console.error('Error de conexión:', error);
                 const errorMessage = document.getElementById('error-message');
                 if (errorMessage) {
-                    errorMessage.style.display = 'block'; // Muestra mensaje de error
+                    errorMessage.style.display = 'block';
                 } else {
                     console.error('No se encontró el elemento con id="error-message"');
                 }
@@ -418,17 +424,16 @@ function loadPage(page) {
             }
         });
 
-
         document.getElementById('menuIcon').addEventListener('click', function () {
             const hamburgerMenu = document.getElementById('burg-dropdown-menu');
             hamburgerMenu.classList.toggle('show');
             this.classList.toggle('active');
         });
-    
+
         document.addEventListener('click', function (event) {
             const hamburgerMenu = document.getElementById('burg-dropdown-menu');
             const menuIcon = document.getElementById('menuIcon');
-    
+
             if (!hamburgerMenu.contains(event.target) && !menuIcon.contains(event.target)) {
                 hamburgerMenu.classList.remove('show');
                 menuIcon.classList.remove('active');
@@ -667,12 +672,29 @@ function loadPage(page) {
         });
 
     } else if (page == 'addResource') {
+        // Event listener para el menú de usuario (icono de usuario)
+        document.getElementById('user-icon').addEventListener('click', function () {
+            document.getElementById('dropdown-menu').classList.toggle('show');
+        });
+    
+        // Cerrar el menú de usuario si se hace clic fuera
+        document.addEventListener('click', function (event) {
+            const menu = document.getElementById('dropdown-menu');
+            const userIcon = document.getElementById('user-icon');
+    
+            if (!menu.contains(event.target) && !userIcon.contains(event.target)) {
+                menu.classList.remove('show');
+            }
+        });
+    
+        // Event listener para el menú hamburguesa
         document.getElementById('menuIcon').addEventListener('click', function () {
             const hamburgerMenu = document.getElementById('burg-dropdown-menu');
             hamburgerMenu.classList.toggle('show');
             this.classList.toggle('active');
         });
     
+        // Cerrar el menú hamburguesa si se hace clic fuera
         document.addEventListener('click', function (event) {
             const hamburgerMenu = document.getElementById('burg-dropdown-menu');
             const menuIcon = document.getElementById('menuIcon');
@@ -682,37 +704,59 @@ function loadPage(page) {
                 menuIcon.classList.remove('active');
             }
         });
+    
+        // Event listener para el formulario de añadir recurso
+        document.getElementById('addResourceForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe
         
-        document.getElementById('user-icon').addEventListener('click', function () {
-            document.getElementById('dropdown-menu').classList.toggle('show');
-        });
+            // Captura los datos del formulario
+            const tipo = document.getElementById('tipo').value;
+            const nombre = document.getElementById('name').value;
+            const descripcion = document.getElementById('desc').value;
         
-        document.getElementById('edit').addEventListener('click', function (event) {
-            event.preventDefault();
-            loadPage('editProfile');
-        });
+            // Crea un objeto con los datos del recurso
+            const recurso = {
+                tipo: tipo,
+                nombre: nombre,
+                descripcion: descripcion
+            };
         
-        document.addEventListener('click', function (event) {
-            const menu = document.getElementById('dropdown-menu');
-            const userIcon = document.getElementById('user-icon');
+            // Obtén el ID del usuario actual
+            const userId = obtenerUserId(); // Implementa esta función para obtener el ID del usuario
         
-            if (!menu.contains(event.target) && !userIcon.contains(event.target)) {
-                menu.classList.remove('show');
+            if (!userId) {
+                alert("No se pudo obtener el ID del usuario. Por favor, inicie sesión nuevamente.");
+                return;
             }
-        });
-
-        document.getElementById('logout').addEventListener('click', function (event) {
-            event.preventDefault(); // Evita que el enlace navegue a otra página
-            loadPage('login'); // Carga la página de inicio de sesión
-        });
-
-        document.getElementById('addCompetence').addEventListener('click', function (event) {
-            event.preventDefault();
-            loadPage('addResource');
-        });
-        document.getElementById('home').addEventListener('click', function (event) {
-            event.preventDefault();
-            loadPage('main');
+        
+            // Envía los datos al backend para añadir el recurso
+            fetch(`http://localhost:8080/usuarios/${userId}/recurso`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(recurso) 
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al añadir el recurso');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Recurso añadido:', data);
+                alert('Recurso añadido con éxito!'); // Muestra un mensaje de éxito
+                loadPage('main'); // Redirige al usuario a la página principal
+            })
+            .catch(error => {
+                console.error('Error de conexión:', error);
+                const errorMessage = document.getElementById('error-message');
+                if (errorMessage) {
+                    errorMessage.style.display = 'block'; // Muestra mensaje de error
+                } else {
+                    console.error('No se encontró el elemento con id="error-message"');
+                }
+            });
         });
     }
 }

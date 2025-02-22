@@ -15,6 +15,14 @@ public class Tecnologia {
     private Long id;
 
     private String nombre;
+    private String tipo;
+    private String descripcion;
+
+    public Tecnologia(String nombre, String tipo, String descripcion) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.descripcion = descripcion;
+    }
 
     // ✅ Si no tienes Lombok funcionando, añade el getter:
     public String getNombre() {
@@ -23,5 +31,9 @@ public class Tecnologia {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getTipo(){
+        return tipo;
     }
 }

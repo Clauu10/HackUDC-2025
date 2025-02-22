@@ -1,7 +1,13 @@
 package com.example.CompetenciApp.Model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "cursos")
@@ -15,6 +21,15 @@ public class Curso {
     private Long id;
 
     private String nombre;
+    private String tipo;
+    private String descripcion;
+
+    public Curso(String nombre, String tipo, String descripcion) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.descripcion = descripcion;
+    }
+    
 
     // ✅ Si Lombok no funciona, agrega manualmente los getters y setters:
     public Long getId() {
@@ -31,5 +46,9 @@ public class Curso {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getTipo(){
+        return tipo;
     }
 }
