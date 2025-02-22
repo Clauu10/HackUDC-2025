@@ -44,6 +44,7 @@ const pages = {
                     <div id="burg-dropdown-menu" class="burg-dropdown hidden">
                         <a href="" id="home">Inicio</a>
                         <a href="" id="addCompetence">Añadir Competencia</a>
+                        <a href="" id="chatBot">ChatBot</a>
                     </div>
                 </div>
                 <h1 class="title">CompetenciApp</h1>
@@ -162,10 +163,10 @@ const pages = {
                 <h1>CompetenciApp</h1>
                 <div class="login-container">
                     <h2>Nuevo Recurso</h2>
-                    <form id="loginForm">
+                    <form id="addResourceForm">
                         <div class="input-group">
                             <label for="tipo">Tipo:</label>
-                            <select id="tipo">
+                            <select id="tipo" name="tipo" required>
                                 <option value="">Selecciona un tipo</option>
                                 <option value="tec">Tecnologías</option>
                                 <option value="cur">Cursos</option>
@@ -426,6 +427,11 @@ function loadPage(page) {
             if (!menu.contains(event.target) && !userIcon.contains(event.target)) {
                 menu.classList.remove('show');
             }
+        });
+
+        document.getElementById('chatBot').addEventListener('click', function (event) {
+            event.preventDefault();  
+            loadChatPage();         
         });
 
         document.getElementById('menuIcon').addEventListener('click', function () {
@@ -731,58 +737,66 @@ function loadPage(page) {
         });
     
         // Event listener para el formulario de añadir recurso
-        document.getElementById('addResourceForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Evita que el formulario se envíe
-        
-            // Captura los datos del formulario
-            const tipo = document.getElementById('tipo').value;
-            const nombre = document.getElementById('name').value;
-            const descripcion = document.getElementById('desc').value;
-        
-            // Crea un objeto con los datos del recurso
-            const recurso = {
-                tipo: tipo,
-                nombre: nombre,
-                descripcion: descripcion
-            };
-        
-            // Obtén el ID del usuario actual
-            const userId = obtenerUserId(); // Implementa esta función para obtener el ID del usuario
-        
-            if (!userId) {
-                alert("No se pudo obtener el ID del usuario. Por favor, inicie sesión nuevamente.");
-                return;
-            }
-        
-            // Envía los datos al backend para añadir el recurso
-            fetch(`http://localhost:8080/usuarios/${userId}/recurso`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(recurso) 
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al añadir el recurso');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Recurso añadido:', data);
-                alert('Recurso añadido con éxito!'); // Muestra un mensaje de éxito
-                loadPage('main'); // Redirige al usuario a la página principal
-            })
-            .catch(error => {
-                console.error('Error de conexión:', error);
-                const errorMessage = document.getElementById('error-message');
-                if (errorMessage) {
-                    errorMessage.style.display = 'block'; // Muestra mensaje de error
-                } else {
-                    console.error('No se encontró el elemento con id="error-message"');
-                }
-            });
-        });
+document.getElementById('addResourceForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Evita que el formulario se envíe
+
+    // Captura los datos del formulario
+    const tipoSeleccionado = document.getElementById('tipo').value;
+    const nombre = document.getElementById('name').value;
+    const descripcion = document.getElementById('desc').value;
+
+    // Mapear los valores seleccionados al formato que espera el backend
+    const tipoMapeado = {
+        tec: "tecnologia",
+        cur: "curso",
+        recur: "recurso"
+    };
+
+    // Crea un objeto con los datos del recurso
+    const recurso = {
+        tipo: tipoMapeado[tipoSeleccionado] || "recurso", // Default a "recurso" si no se selecciona
+        nombre: nombre,
+        descripcion: descripcion
+    };
+
+    // Verificación en consola
+    console.log("User ID:", obtenerUserId());
+    console.log("Enviando recurso:", recurso);
+
+    // Obtén el ID del usuario actual
+    const userId = obtenerUserId();
+
+    if (!userId) {
+        alert("No se pudo obtener el ID del usuario. Por favor, inicie sesión nuevamente.");
+        return;
+    }
+
+    // Envía los datos al backend para añadir el recurso
+    fetch(`http://localhost:8080/usuarios/${userId}/recurso`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(recurso)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al añadir el recurso');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Recurso añadido:', data);
+        alert('Recurso añadido con éxito!'); // Muestra un mensaje de éxito
+        loadPage('main'); // Redirige al usuario a la página principal
+    })
+    .catch(error => {
+        console.error('Error de conexión:', error);
+        alert('Error al añadir el recurso');
+    });
+});
+
+
     }
 }
 
@@ -790,3 +804,7 @@ function loadPage(page) {
 document.addEventListener('DOMContentLoaded', function () {
     loadPage('login'); // Ahora se ejecutará cuando el DOM esté listo
 });
+
+function loadChatPage() {
+    window.location.href = 'chat.html'; // Redirige a una nueva página con el chat
+}
