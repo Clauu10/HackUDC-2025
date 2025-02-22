@@ -7,17 +7,21 @@ import com.example.CompetenciApp.Model.Tecnologia;
 import com.example.CompetenciApp.Model.Usuario;
 import com.example.CompetenciApp.Repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-
+    @Autowired
+    public UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
     // 1️⃣ Registrar usuario
     public Usuario registrarUsuario(Usuario usuario) {
         return usuarioRepository.save(usuario);
