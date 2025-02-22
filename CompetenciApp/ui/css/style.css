@@ -1,13 +1,4 @@
 /* styles.css */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #a8a8a8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: auto;
-}
 
 .login-container, .register-container {
     background-color: #fff;
@@ -23,12 +14,16 @@ h1, h2 {
     margin-bottom: 20px;
 }
 
+textarea {
+    max-width: 100%;
+    resize: vertical;
+}
 
 input[type="text"],
 input[type="email"],
 input[type="number"],
 input[type="password"],
-select {
+select, textarea {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -72,52 +67,43 @@ p {
     text-align: center;
 }
 
-.home-page {
-    background-color: #fff;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+}
+
+#body-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: auto;
     width: 100%;
 }
 
-#search {
-    text-align: center;
-    margin-top: 30px;
+.home-page {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-#search {
-    text-align: center;
-    margin-top: 30px;
-    display: flex; 
-    justify-content: center;
-    align-items: center; 
-}
-
-#search-bar {
-    width: 80%;
-    max-width: 300px;
-    padding: 10px;
-}
-
-#search-button {
-    width: 30%;
-    padding: 10px 20px;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-
-#filters {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    gap: 20px;
-}
-
-#filters #filters select {
-    font-size: 16px;
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
 }
 
 .user-menu {
     position: absolute;
-    top: 20px;
+    top: 15px;
     right: 20px;
 }
 
@@ -133,10 +119,10 @@ p {
     border-radius: 50%;
 }
 
-/* Dropdown (oculto por defecto) */
 .dropdown {
     position: absolute;
     right: 0;
+    top: 50px;
     background: white;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -158,11 +144,175 @@ p {
     background-color: #f0f0f0;
 }
 
-/* Clase para mostrar el menú */
-.hidden {
-    display: none;
-}
-
 .show {
     display: flex;
+}
+
+#search-main {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#search-bar-main {
+    flex-grow: 1;
+    max-width: 500px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 18px;
+}
+
+#search-button-main {
+    width: 120px;
+    height: 45px;
+    background-color: #ac3931;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#search-button:hover {
+    background-color: #922c25;
+}
+
+#filters {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.filter-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.filter-group label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.filter-group select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+/* Menú Hamburguesa */
+.hamburger-menu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+#dropdown-hamburger-menu {
+    position: absolute;
+    left: 0;
+    top: 40px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    display: none;
+    flex-direction: column;
+    text-align: left;
+}
+
+#dropdown-hamburger-menu a {
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+#dropdown-hamburger-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.search-results-container h1{
+    margin-top: 20px;
+}
+
+/* Contenedor principal de la barra de búsqueda y filtros */
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Reducimos el espacio entre elementos */
+    flex-wrap: nowrap; /* Evita que los elementos se desplacen a la siguiente línea */
+}
+
+/* Ajustes de la barra de búsqueda */
+#search-bar {
+    max-width: 400px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 18px;
+}
+
+/* Botón de búsqueda */
+#search-button {
+    width: 120px;
+    height: 45px;
+    background-color: #ac3931;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#search-button:hover {
+    background-color: #922c25;
+}
+
+/* Filtros de búsqueda */
+#filters-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+#search-and-filters {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.filter-search {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.filter-search label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.filter-search select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.separator-line {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #ccc;
 }
