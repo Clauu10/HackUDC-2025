@@ -43,11 +43,11 @@ public class UsuarioController {
     }
 
     // 4️⃣ Añadir recurso a un usuario
-    @PostMapping("/{id}/recurso")
+    /*@PostMapping("/{id}/recurso")
     public ResponseEntity<Usuario> añadirRecurso(@PathVariable Long id, @RequestBody Recurso recurso) {
         Usuario actualizado = usuarioService.añadirRecurso(id, recurso);
         return ResponseEntity.ok(actualizado);
-    }
+    }*/
 
     // 5️⃣ Buscar por palabra clave
     @GetMapping("/buscar")
