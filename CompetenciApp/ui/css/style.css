@@ -350,3 +350,180 @@ body {
     border: 0;
     border-top: 1px solid #ccc;
 }
+
+backButton {
+    background-color: #ac3931; /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 10px 20px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    font-size: 16px; /* Tamaño del texto */
+}
+
+.volver-button{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#volver{
+    width: 120px;
+    height: 45px;
+    background-color: #ac3931;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fondo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e5ddd5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor principal */
+.chat-container {
+    width: 400px;
+    height: 600px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Encabezado */
+.header {
+    background-color: #ac3931;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Ventana de mensajes */
+#chat-window {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f0f0f0;
+}
+
+/* Mensajes */
+#chat-messages {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mensajes del usuario */
+.user-message {
+    background-color: #2E8B57;
+    align-self: flex-end;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 10px 0 10px 10px;
+    max-width: 70%;
+}
+
+/* Mensajes del bot */
+.bot-message {
+    background-color: #fff;
+    align-self: flex-start;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 0 10px 10px 10px;
+    border: 1px solid #ccc;
+    max-width: 70%;
+}
+
+.input-container {
+    display: flex;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    gap: 10px;
+}
+
+#user-input {
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+#enviar {
+    padding: 10px 20px;
+    background-color: #ac3931;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#enviar:hover {
+    background-color: #8b2c25;
+}
+
+/* Estilos para los resultados de búsqueda */
+.search-results-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.resultados-lista {
+    list-style-type: none;
+    padding: 0;
+}
+
+.resultados-lista li {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.resultados-lista li strong {
+    color: #ac3931;
+}
+
+/* Estilos para la paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: #ac3931;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background-color: #8b2c25;
+}
+
+.pagination button.active {
+    background-color: #8b2c25;
+}

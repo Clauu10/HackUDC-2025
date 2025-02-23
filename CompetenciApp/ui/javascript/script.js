@@ -3,23 +3,25 @@
 // Definimos el contenido de cada "página" como strings
 const pages = {
     login: `
-        <div id="login" class="login">
-            <h1>CompetenciApp</h1>
-            <div class="login-container">
-                <h2>Iniciar Sesión</h2>
-                <form id="loginForm">
-                    <div class="input-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="contrasenha">Contraseña:</label>
-                        <input type="password" id="contrasenha" name="contrasenha" required>
-                    </div>
-                    <button type="submit">Iniciar sesión</button>
-                    <p id="error-message" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
-                </form>
-                <button id="register-button" style="margin-top: 10px;">Registrarse</button>
+        <div id="body-main">
+            <div id="login" class="login">
+                <h1>CompetenciApp</h1>
+                <div class="login-container">
+                    <h2>Iniciar Sesión</h2>
+                    <form id="loginForm">
+                        <div class="input-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="contrasenha">Contraseña:</label>
+                            <input type="password" id="contrasenha" name="contrasenha" required>
+                        </div>
+                        <button type="submit">Iniciar sesión</button>
+                        <p id="error-message" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
+                    </form>
+                    <button id="register-button" style="margin-top: 10px;">Registrarse</button>
+                </div>
             </div>
         </div>
     `,
@@ -97,6 +99,7 @@ const pages = {
                 <div id="burg-dropdown-menu" class="burg-dropdown hidden">
                     <a href="" id="home">Inicio</a>
                     <a href="" id="addCompetence">Añadir Competencia</a>
+                    <a href="" id="chatBot">ChatBot</a>
                 </div>
             </div>
             <h1 class="title">CompetenciApp</h1>
@@ -158,11 +161,12 @@ const pages = {
                     <div id="burg-dropdown-menu" class="burg-dropdown hidden">
                         <a href="" id="home">Inicio</a>
                         <a href="" id="addCompetence">Añadir Competencia</a>
+                        <a href="" id="chatBot">ChatBot</a>
                     </div>
                 </div>
                 <h1>CompetenciApp</h1>
                 <div class="login-container">
-                    <h2>Nuevo Recurso</h2>
+                    <h2>Nueva Competencia</h2>
                     <form id="addResourceForm">
                         <div class="input-group">
                             <label for="tipo">Tipo:</label>
@@ -257,6 +261,7 @@ const pages = {
                     <div id="burg-dropdown-menu" class="burg-dropdown hidden">
                         <a href="" id="home">Inicio</a>
                         <a href="" id="addCompetence">Añadir Competencia</a>
+                        <a href="" id="chatBot">ChatBot</a>
                     </div>
                 </div>
                 <h1>CompetenciApp</h1>
@@ -294,21 +299,98 @@ const pages = {
                 </div>
             </div>
         </div>
+    `,
+    chat: `
+        <div class="page">
+            <div class="chat-container">
+                <div class="header">Chatbot IA 🤖</div>
+                
+                <div id="chat-window">
+                    <div id="chat-messages"></div>
+                </div>
+        
+                <div class="input-container">
+                    <input type="text" id="user-input" placeholder="Escribe tu mensaje..." autofocus>
+                    <button id="enviar" onclick="sendMessage()">Enviar</button>
+                    <script src="/CompetenciApp/ui/javascript/app.js"></script>
+                </div>
+            </div>
+        
+            <div class="volver-button">
+                <button id="volver">Volver</button>
+            </div>
+        </div>
     `
 };
-function mostrarResultadosBusqueda(data, palabraClave) {
+function mostrarResultadosBusqueda(data, palabraClave, page = 1, itemsPerPage = 5) {
     const app = document.getElementById('app');
     let resultadosHTML = `
         <div class="search-results-container">
-            <h1>Resultados de búsqueda para: "${palabraClave}"</h1>
-            <button id="volver">Volver</button>
-            <ul class="resultados-lista">
+            <div class="user-menu">
+                <button id="user-icon">
+                    <i class="fas fa-user" style="color: #ac3931; font-size: 24px;"></i>
+                </button>
+                <div id="dropdown-menu" class="dropdown hidden">
+                    <a href="" id="edit">Editar perfil</a>
+                    <a href="" id="logout">Cerrar sesión</a>
+                </div>
+            </div>
+            <div class="hamburger-menu">
+                <button id="menuIcon">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </button>
+                <div id="burg-dropdown-menu" class="burg-dropdown hidden">
+                    <a href="" id="home">Inicio</a>
+                    <a href="" id="addCompetence">Añadir Competencia</a>
+                    <a href="" id="chatBot">ChatBot</a>
+                </div>
+            </div>
+            <h1 class="title">CompetenciApp</h1>
+            <div id="search-and-filters" class="search-and-filter">
+                <div id="search" class="search-container">
+                    <input type="text" id="search-bar" placeholder="Buscar..." />
+                    <button id="search-button">Buscar</button>
+                </div>
+
+                <!-- Filtros de búsqueda -->
+                <div id="filters-search" class="filters-search-container">
+                    <div class="filter-search">
+                        <select id="tipo">
+                            <option value="">Tipo</option>
+                            <option value="tec">Tecnologías</option>
+                            <option value="cur">Cursos</option>
+                            <option value="recur">Recursos</option>
+                        </select>
+                    </div>
+                    <div class="filter-search">
+                        <select id="rol">
+                            <option value="">Rol</option>
+                            <option value="analyst">Analista</option>
+                            <option value="chief">Jefe Proyecto</option>
+                            <option value="dev">Desarrollador</option>
+                            <option value="qa">QA</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="separator-line">
+
+            <div id="search-results">
+                <h1>Resultados de búsqueda para: "${palabraClave}"</h1>
     `;
 
     if (data.length === 0) {
-        resultadosHTML += `<li>No se encontraron resultados para "${palabraClave}".</li>`;
+        resultadosHTML += `<p>No se encontraron resultados para "${palabraClave}".</p>`;
     } else {
-        data.forEach(usuario => {
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedData = data.slice(start, end);
+
+        resultadosHTML += `<ul class="resultados-lista">`;
+        paginatedData.forEach(usuario => {
             resultadosHTML += `
                 <li>
                     <strong>Nombre:</strong> ${usuario.nombre} <br>
@@ -319,15 +401,108 @@ function mostrarResultadosBusqueda(data, palabraClave) {
                 </li><hr>
             `;
         });
+        resultadosHTML += `</ul>`;
+
+        // Paginación
+        const totalPages = Math.ceil(data.length / itemsPerPage);
+        resultadosHTML += `<div class="pagination">`;
+        for (let i = 1; i <= totalPages; i++) {
+            resultadosHTML += `<button class="${i === page ? 'active' : ''}" onclick="mostrarResultadosBusqueda(data, '${palabraClave}', ${i}, ${itemsPerPage})">${i}</button>`;
+        }
+        resultadosHTML += `</div>`;
     }
 
-    resultadosHTML += `</ul></div>`;
+    resultadosHTML += `
+        <div class="volver-button">
+            <button id="volver">Volver</button>
+        </div> `;
 
     app.innerHTML = resultadosHTML;
 
-    // Evento para volver al main
     document.getElementById('volver').addEventListener('click', function () {
         loadPage('main');
+    });
+    
+    configurarMenus();
+    configurarBusquedaManual();
+}
+
+function configurarBusquedaManual() {
+    document.getElementById('search-button').addEventListener('click', function () {
+        const searchTerm = document.getElementById('search-bar').value;
+        const tipo = document.getElementById('tipo').value;
+        const rol = document.getElementById('rol').value;
+
+        fetch(`http://localhost:8080/usuarios/buscar?palabraClave=${searchTerm}&tipo=${tipo}&rol=${rol}`)
+            .then(response => response.json())
+            .then(data => {
+                mostrarResultadosBusqueda(data, searchTerm); // Muestra los resultados
+            })
+            .catch(error => {
+                console.error('Error en la búsqueda:', error);
+            });
+    });
+}
+
+function configurarMenus() {
+    // Menú de usuario (icono de usuario)
+    document.getElementById('user-icon').addEventListener('click', function () {
+        document.getElementById('dropdown-menu').classList.toggle('show');
+    });
+
+    // Cerrar el menú de usuario si se hace clic fuera
+    document.addEventListener('click', function (event) {
+        const menu = document.getElementById('dropdown-menu');
+        const userIcon = document.getElementById('user-icon');
+
+        if (!menu.contains(event.target) && !userIcon.contains(event.target)) {
+            menu.classList.remove('show');
+        }
+    });
+
+    // Menú hamburguesa
+    document.getElementById('menuIcon').addEventListener('click', function () {
+        const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+        hamburgerMenu.classList.toggle('show');
+        this.classList.toggle('active');
+    });
+
+    // Cerrar el menú hamburguesa si se hace clic fuera
+    document.addEventListener('click', function (event) {
+        const hamburgerMenu = document.getElementById('burg-dropdown-menu');
+        const menuIcon = document.getElementById('menuIcon');
+
+        if (!hamburgerMenu.contains(event.target) && !menuIcon.contains(event.target)) {
+            hamburgerMenu.classList.remove('show');
+            menuIcon.classList.remove('active');
+        }
+    });
+
+    // Eventos para los enlaces del menú de usuario
+    document.getElementById('edit').addEventListener('click', function (event) {
+        event.preventDefault();
+        loadPage('editProfile');
+    });
+
+    document.getElementById('logout').addEventListener('click', function (event) {
+        event.preventDefault();
+        loadPage('login');
+    });
+
+    // Eventos para los enlaces del menú hamburguesa
+    document.getElementById('home').addEventListener('click', function (event) {
+        event.preventDefault();
+        loadPage('main');
+    });
+
+    document.getElementById('addCompetence').addEventListener('click', function (event) {
+        event.preventDefault();
+        loadPage('addResource');
+    });
+
+    document.getElementById('chatBot').addEventListener('click', function (event) {
+        event.preventDefault();
+        loadPage('chat');
     });
 }
 
@@ -340,8 +515,57 @@ function loadPage(page) {
     const app = document.getElementById('app');
     app.innerHTML = pages[page]; // Cargamos el contenido de la página
 
-    // Añadimos los event listeners específicos de cada página
-    if (page === 'login') {
+    if(page =='chat'){
+        window.appendMessage = function(message, sender) {
+            const chatWindow = document.getElementById('chat-messages');
+            if (!chatWindow) {
+                console.error('El contenedor de mensajes no fue encontrado.');
+                return;
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+            messageDiv.textContent = message;
+            chatWindow.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        };
+
+        window.sendMessage = async function() {
+            const userInput = document.getElementById('user-input');
+            if (!userInput) {
+                console.error('El input del usuario no fue encontrado.');
+                return;
+            }
+
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            appendMessage(message, 'user');
+            userInput.value = '';
+
+            try {
+                const response = await fetch('http://localhost:8080/chatbot/preguntar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mensaje: message })
+                });
+
+                if (!response.ok) throw new Error(`Error ${response.status}`);
+
+                const data = await response.text();
+                appendMessage(data, 'bot');
+            } catch (error) {
+                appendMessage("⚠️ Error al comunicarse con el chatbot.", 'bot');
+                console.error("Error:", error);
+            }
+        };
+
+        // Vincular el botón de volver
+        document.getElementById('volver').addEventListener('click', function () {
+            loadPage('main');
+        });
+
+    }else if (page === 'login') {
         document.getElementById('loginForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Evita que el formulario se envíe
 
@@ -485,7 +709,7 @@ function loadPage(page) {
 
         document.getElementById('chatBot').addEventListener('click', function (event) {
             event.preventDefault();  
-            loadChatPage();         
+            loadPage('chat');         
         });
 
         document.getElementById('menuIcon').addEventListener('click', function () {
@@ -627,6 +851,11 @@ function loadPage(page) {
             loadPage('main');
         });
 
+        document.getElementById('chatBot').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('chat');
+        });
+
     } else if (page === 'editProfile') {
         const userId = obtenerUserId();
         if (!userId) {
@@ -756,6 +985,11 @@ function loadPage(page) {
             loadPage('main');
         });
 
+        document.getElementById('chatBot').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('chat')();
+        });
+
     } else if (page == 'addResource') {
         // Event listener para el menú de usuario (icono de usuario)
         document.getElementById('user-icon').addEventListener('click', function () {
@@ -789,66 +1023,71 @@ function loadPage(page) {
                 menuIcon.classList.remove('active');
             }
         });
+
+        document.getElementById('chatBot').addEventListener('click', function (event) {
+            event.preventDefault();
+            loadPage('chat')();
+        });
     
-        // Event listener para el formulario de añadir recurso
-document.getElementById('addResourceForm').addEventListener('submit', function (event) {
-    event.preventDefault(); // Evita que el formulario se envíe
+                // Event listener para el formulario de añadir recurso
+        document.getElementById('addResourceForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe
 
-    // Captura los datos del formulario
-    const tipoSeleccionado = document.getElementById('tipo').value;
-    const nombre = document.getElementById('name').value;
-    const descripcion = document.getElementById('desc').value;
+            // Captura los datos del formulario
+            const tipoSeleccionado = document.getElementById('tipo').value;
+            const nombre = document.getElementById('name').value;
+            const descripcion = document.getElementById('desc').value;
 
-    // Mapear los valores seleccionados al formato que espera el backend
-    const tipoMapeado = {
-        tec: "tecnologia",
-        cur: "curso",
-        recur: "recurso"
-    };
+            // Mapear los valores seleccionados al formato que espera el backend
+            const tipoMapeado = {
+                tec: "tecnologia",
+                cur: "curso",
+                recur: "recurso"
+            };
 
-    // Crea un objeto con los datos del recurso
-    const recurso = {
-        tipo: tipoMapeado[tipoSeleccionado] || "recurso", // Default a "recurso" si no se selecciona
-        nombre: nombre,
-        descripcion: descripcion
-    };
+            // Crea un objeto con los datos del recurso
+            const recurso = {
+                tipo: tipoMapeado[tipoSeleccionado] || "recurso", // Default a "recurso" si no se selecciona
+                nombre: nombre,
+                descripcion: descripcion
+            };
 
-    // Verificación en consola
-    console.log("User ID:", obtenerUserId());
-    console.log("Enviando recurso:", recurso);
+            // Verificación en consola
+            console.log("User ID:", obtenerUserId());
+            console.log("Enviando recurso:", recurso);
 
-    // Obtén el ID del usuario actual
-    const userId = obtenerUserId();
+            // Obtén el ID del usuario actual
+            const userId = obtenerUserId();
 
-    if (!userId) {
-        alert("No se pudo obtener el ID del usuario. Por favor, inicie sesión nuevamente.");
-        return;
-    }
+            if (!userId) {
+                alert("No se pudo obtener el ID del usuario. Por favor, inicie sesión nuevamente.");
+                return;
+            }
 
-    // Envía los datos al backend para añadir el recurso
-    fetch(`http://localhost:8080/usuarios/${userId}/recurso`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(recurso)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al añadir el recurso');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Recurso añadido:', data);
-        alert('Recurso añadido con éxito!'); // Muestra un mensaje de éxito
-        loadPage('main'); // Redirige al usuario a la página principal
-    })
-    .catch(error => {
-        console.error('Error de conexión:', error);
-        alert('Error al añadir el recurso');
-    });
-});
+            // Envía los datos al backend para añadir el recurso
+            fetch(`http://localhost:8080/usuarios/${userId}/recurso`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(recurso)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al añadir el recurso');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Recurso añadido:', data);
+                alert('Recurso añadido con éxito!'); // Muestra un mensaje de éxito
+                loadPage('main'); // Redirige al usuario a la página principal
+            })
+            .catch(error => {
+                console.error('Error de conexión:', error);
+                alert('Error al añadir el recurso');
+            });
+        });
 
 
     }
@@ -858,7 +1097,3 @@ document.getElementById('addResourceForm').addEventListener('submit', function (
 document.addEventListener('DOMContentLoaded', function () {
     loadPage('login'); // Ahora se ejecutará cuando el DOM esté listo
 });
-
-function loadChatPage() {
-    window.location.href = 'chat.html'; // Redirige a una nueva página con el chat
-}
